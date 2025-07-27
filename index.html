@@ -20,7 +20,7 @@
       overflow-x: hidden;
     }
     .cursor-quill {
-      cursor: url('https://shelmasahayam.github.io/ataraxia-quiz/assets/quill-cursor.png'), auto;
+      cursor: url('https://shelmasahayam.github.io/ataraxiaquiz/assets/quill-cursor.png'), auto;
     }
   </style>
 </head>
@@ -324,7 +324,7 @@
       };
 
       const shareOnX = () => {
-        const text = encodeURIComponent(`I got ${result} in the Ataraxia Realm Quiz! Discover your realm at https://<your-username>.github.io/ataraxia-quiz/`);
+        const text = encodeURIComponent(`I got ${result} in the Ataraxia Realm Quiz! Discover your realm at https://shelmasahayam.github.io/ataraxiaquiz/`);
         window.open(`https://x.com/intent/tweet?text=${text}`, '_blank');
       };
 
@@ -334,10 +334,10 @@
 
       const getSigilImage = (realm) => {
         try {
-          return `https://shelmasahayam.github.io/ataraxia-quiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
+          return `https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
         } catch (e) {
           console.error(`Sigil image for ${realm} not found`);
-          return 'https://shelmasahayam.github.io/ataraxia-quiz/assets/sigil-sorin.png';
+          return 'https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-sorin.png';
         }
       };
 
@@ -355,7 +355,7 @@
                 src={getSigilImage(result)}
                 alt={`${result} Sigil`}
                 className="mx-auto mb-6 w-32 h-32"
-                onError={(e) => (e.target.src = 'https://shelmasahayam.github.io/ataraxia-quiz/assets/sigil-sorin.png')}
+                onError={(e) => (e.target.src = 'https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-sorin.png')}
               />
             </div>
             <div className="flex justify-center gap-4 mb-6">
