@@ -22,7 +22,7 @@
       overflow-x: hidden;
     }
     .cursor-quill {
-      cursor: url('https://shelmasahayam.github.io/ataraxiaquiz/assets/quill-cursor.png'), auto;
+      cursor: url('https://<your-username>.github.io/ataraxiaquiz/assets/quill-cursor.png'), auto;
     }
     #result-card {
       background: rgba(0, 0, 0, 0.7);
@@ -269,32 +269,31 @@
     };
 
     const EmailForm = ({ onSubmit }) => {
-      const [email, setEmail] = React.useState('');
-
-      const handleSubmit = () => {
-        onSubmit(email);
-      };
-
       return (
         <div className="text-center p-6 max-w-lg mx-auto cursor-quill">
           <h2 className="text-2xl font-cinzel text-amber-300 mb-4">Enter Your Email</h2>
           <p className="text-gray-300 mb-6">Provide your email to receive your Ataraxia realm results and updates.</p>
-          <div className="flex flex-col items-center">
+          <form
+            action="https://formspree.io/f/<your-formspree-id>"
+            method="POST"
+            onSubmit={onSubmit}
+            className="flex flex-col items-center"
+          >
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
               placeholder="Enter your email"
               className="bg-gray-800 text-gray-200 px-4 py-2 rounded-lg mb-4 w-full max-w-xs"
               required
             />
+            <input type="hidden" name="_subject" value="Ataraxia Realm Quiz Submission" />
             <button
-              onClick={handleSubmit}
+              type="submit"
               className="bg-amber-500 text-gray-900 px-6 py-2 rounded-full hover:bg-amber-400 transition font-cinzel"
             >
               See Your Realm
             </button>
-          </div>
+          </form>
         </div>
       );
     };
@@ -304,27 +303,6 @@
       const [scores, setScores] = React.useState({ E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 });
       const [showEmailForm, setShowEmailForm] = React.useState(false);
       const [result, setResult] = React.useState(null);
-      const [email, setEmail] = React.useState('');
-      const [isMusicPlaying, setIsMusicPlaying] = React.useState(false);
-      const audioRef = React.useRef(new Audio('https://shelmasahayam.github.io/ataraxiaquiz/assets/ataraxia-theme.mp3'));
-
-      React.useEffect(() => {
-        const audio = audioRef.current;
-        audio.loop = true;
-        return () => {
-          audio.pause();
-        };
-      }, []);
-
-      const toggleMusic = () => {
-        const audio = audioRef.current;
-        if (isMusicPlaying) {
-          audio.pause();
-        } else {
-          audio.play().catch((error) => console.error('Audio playback error:', error));
-        }
-        setIsMusicPlaying(!isMusicPlaying);
-      };
 
       const handleAnswer = (value, dimension) => {
         setScores((prev) => ({ ...prev, [value]: prev[value] + 1 }));
@@ -335,8 +313,8 @@
         }
       };
 
-      const handleEmailSubmit = (submittedEmail) => {
-        setEmail(submittedEmail);
+      const handleEmailSubmit = (event) => {
+        event.preventDefault();
         const mbtiType = determineMBTI(scores);
         setResult(realmMappings[mbtiType] || "Sorin");
         setShowEmailForm(false);
@@ -351,7 +329,7 @@
       };
 
       const shareOnX = () => {
-        const text = encodeURIComponent(`I got ${result} in the Ataraxia Realm Quiz! Discover your realm at https://shelmasahayam.github.io/ataraxiaquiz/`);
+        const text = encodeURIComponent(`I got ${result} in the Ataraxia Realm Quiz! Discover your realm at https://<your-username>.github.io/ataraxiaquiz/`);
         window.open(`https://x.com/intent/tweet?text=${text}`, '_blank');
       };
 
@@ -370,10 +348,10 @@
 
       const getSigilImage = (realm) => {
         try {
-          return `https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
+          return `https://<your-username>.github.io/ataraxiaquiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
         } catch (e) {
           console.error(`Sigil image for ${realm} not found`);
-          return 'https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-sorin.png';
+          return 'https://<your-username>.github.io/ataraxiaquiz/assets/sigil-sorin.png';
         }
       };
 
@@ -391,7 +369,7 @@
                 src={getSigilImage(result)}
                 alt={`${result} Sigil`}
                 className="mx-auto mb-6 w-32 h-32"
-                onError={(e) => (e.target.src = 'https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-sorin.png')}
+                onError={(e) => (e.target.src = 'https://<your-username>.github.io/ataraxiaquiz/assets/sigil-sorin.png')}
               />
             </div>
             <div className="flex justify-center gap-4 mb-6">
@@ -408,12 +386,6 @@
                 Share on Instagram
               </button>
             </div>
-            <button
-              onClick={toggleMusic}
-              className="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-500 transition font-cinzel mt-4"
-            >
-              {isMusicPlaying ? 'Pause Music' : 'Play Music'}
-            </button>
           </div>
         );
       }
@@ -436,12 +408,6 @@
               </button>
             ))}
           </div>
-          <button
-            onClick={toggleMusic}
-            className="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-500 transition font-cinzel mt-6"
-          >
-            {isMusicPlaying ? 'Pause Music' : 'Play Music'}
-          </button>
         </div>
       );
     };
