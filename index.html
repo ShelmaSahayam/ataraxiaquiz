@@ -20,7 +20,7 @@
       overflow-x: hidden;
     }
     .cursor-quill {
-      cursor: url('https://shelmasahayam.github.io/ataraxia-quiz/assets/quill-cursor.png'), auto;
+      cursor: url('https://<your-username>.github.io/ataraxia-quiz/assets/quill-cursor.png'), auto;
     }
   </style>
 </head>
@@ -388,4 +388,25 @@
               <button
                 key={index}
                 onClick={() => handleAnswer(option.value, question.dimension)}
-                className="bg-gray
+                className="bg-gray-800 text-gray-200 px-6 py-3 rounded-lg hover:bg-gray-700 transition"
+              >
+                {option.text}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    const App = () => {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <Quiz />
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
