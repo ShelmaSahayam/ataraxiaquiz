@@ -8,6 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts for Cinzel and Lora -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- html2canvas CDN for Instagram sharing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     body {
       font-family: 'Lora', serif;
@@ -21,6 +23,11 @@
     }
     .cursor-quill {
       cursor: url('https://shelmasahayam.github.io/ataraxiaquiz/assets/quill-cursor.png'), auto;
+    }
+    #result-card {
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      padding: 20px;
     }
   </style>
 </head>
@@ -298,6 +305,26 @@
       const [showEmailForm, setShowEmailForm] = React.useState(false);
       const [result, setResult] = React.useState(null);
       const [email, setEmail] = React.useState('');
+      const [isMusicPlaying, setIsMusicPlaying] = React.useState(false);
+      const audioRef = React.useRef(new Audio('https://shelmasahayam.github.io/ataraxiaquiz/assets/ataraxia-theme.mp3'));
+
+      React.useEffect(() => {
+        const audio = audioRef.current;
+        audio.loop = true;
+        return () => {
+          audio.pause();
+        };
+      }, []);
+
+      const toggleMusic = () => {
+        const audio = audioRef.current;
+        if (isMusicPlaying) {
+          audio.pause();
+        } else {
+          audio.play().catch((error) => console.error('Audio playback error:', error));
+        }
+        setIsMusicPlaying(!isMusicPlaying);
+      };
 
       const handleAnswer = (value, dimension) => {
         setScores((prev) => ({ ...prev, [value]: prev[value] + 1 }));
@@ -329,7 +356,16 @@
       };
 
       const shareOnInstagram = () => {
-        alert('To share on Instagram, visit the full site to download your sigil and post it manually!');
+        html2canvas(document.getElementById('result-card')).then((canvas) => {
+          const link = document.createElement('a');
+          link.download = `ataraxia-result-${result.toLowerCase().replace(' ', '-')}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          alert('Image downloaded! Open Instagram on your mobile device, create a post or story, and upload the image to share your result.');
+        }).catch((error) => {
+          console.error('html2canvas error:', error);
+          alert('Failed to generate image. Please try again or share manually.');
+        });
       };
 
       const getSigilImage = (realm) => {
@@ -372,6 +408,12 @@
                 Share on Instagram
               </button>
             </div>
+            <button
+              onClick={toggleMusic}
+              className="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-500 transition font-cinzel mt-4"
+            >
+              {isMusicPlaying ? 'Pause Music' : 'Play Music'}
+            </button>
           </div>
         );
       }
@@ -394,6 +436,12 @@
               </button>
             ))}
           </div>
+          <button
+            onClick={toggleMusic}
+            className="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-500 transition font-cinzel mt-6"
+          >
+            {isMusicPlaying ? 'Pause Music' : 'Play Music'}
+          </button>
         </div>
       );
     };
