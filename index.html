@@ -334,10 +334,10 @@
 
       const getSigilImage = (realm) => {
         try {
-          return `https://<your-username>.github.io/ataraxia-quiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
+          return `https://shelmasahayam.github.io/ataraxia-quiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
         } catch (e) {
           console.error(`Sigil image for ${realm} not found`);
-          return 'https://<your-username>.github.io/ataraxia-quiz/assets/sigil-sorin.png';
+          return 'https://shelmasahayam.github.io/ataraxia-quiz/assets/sigil-sorin.png';
         }
       };
 
@@ -355,7 +355,7 @@
                 src={getSigilImage(result)}
                 alt={`${result} Sigil`}
                 className="mx-auto mb-6 w-32 h-32"
-                onError={(e) => (e.target.src = 'https://<your-username>.github.io/ataraxia-quiz/assets/sigil-sorin.png')}
+                onError={(e) => (e.target.src = 'https://shelmasahayam.github.io/ataraxia-quiz/assets/sigil-sorin.png')}
               />
             </div>
             <div className="flex justify-center gap-4 mb-6">
