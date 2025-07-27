@@ -298,8 +298,6 @@
       const [showEmailForm, setShowEmailForm] = React.useState(false);
       const [result, setResult] = React.useState(null);
       const [email, setEmail] = React.useState('');
-      const [isMusicPlaying, setIsMusicPlaying] = React.useState(false);
-      const audioRef = React.useRef(new Audio('https://shelmasahayam.github.io/ataraxia-quiz/assets/ataraxia-theme.mp3'));
 
       const handleAnswer = (value, dimension) => {
         setScores((prev) => ({ ...prev, [value]: prev[value] + 1 }));
@@ -325,22 +323,8 @@
         return `${ei}${sn}${tf}${jp}`;
       };
 
-      const toggleMusic = () => {
-        if (isMusicPlaying) {
-          audioRef.current.pause();
-        } else {
-          audioRef.current.loop = true;
-          audioRef.current.play().catch((err) => console.error('Audio play failed:', err));
-        }
-        setIsMusicPlaying(!isMusicPlaying);
-      };
-
-      const downloadSigil = () => {
-        alert('Download feature requires html2canvas, not supported in CodePen. Visit the full site to download your sigil!');
-      };
-
       const shareOnX = () => {
-        const text = encodeURIComponent(`I got ${result} in the Ataraxia Realm Quiz! Discover your realm at https://<username>.github.io/ataraxia-quiz/`);
+        const text = encodeURIComponent(`I got ${result} in the Ataraxia Realm Quiz! Discover your realm at https://<your-username>.github.io/ataraxia-quiz/`);
         window.open(`https://x.com/intent/tweet?text=${text}`, '_blank');
       };
 
@@ -350,10 +334,10 @@
 
       const getSigilImage = (realm) => {
         try {
-          return `https://<username>.github.io/ataraxia-quiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
+          return `https://<your-username>.github.io/ataraxia-quiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
         } catch (e) {
           console.error(`Sigil image for ${realm} not found`);
-          return 'https://<username>.github.io/ataraxia-quiz/assets/sigil-sorin.png';
+          return 'https://<your-username>.github.io/ataraxia-quiz/assets/sigil-sorin.png';
         }
       };
 
@@ -371,7 +355,7 @@
                 src={getSigilImage(result)}
                 alt={`${result} Sigil`}
                 className="mx-auto mb-6 w-32 h-32"
-                onError={(e) => (e.target.src = 'https://<username>.github.io/ataraxia-quiz/assets/sigil-sorin.png')}
+                onError={(e) => (e.target.src = 'https://<your-username>.github.io/ataraxia-quiz/assets/sigil-sorin.png')}
               />
             </div>
             <div className="flex justify-center gap-4 mb-6">
@@ -387,12 +371,6 @@
               >
                 Share on Instagram
               </button>
-              <button
-                onClick={downloadSigil}
-                className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-500 transition font-cinzel"
-              >
-                Download Sigil
-              </button>
             </div>
           </div>
         );
@@ -403,12 +381,6 @@
       return (
         <div className="text-center p-6 max-w-lg mx-auto cursor-quill">
           <h1 className="text-4xl font-cinzel text-amber-300 mb-8">Discover Your Ataraxia Realm</h1>
-          <button
-            onClick={toggleMusic}
-            className="absolute top-4 right-4 bg-gray-800 text-gray-200 px-4 py-2 rounded-full hover:bg-gray-700 transition"
-          >
-            {isMusicPlaying ? 'Pause Music' : 'Play Music'}
-          </button>
           <ProgressBar current={currentQuestion + 1} total={questions.length} />
           <h2 className="text-2xl text-gray-200 mb-6">{question.text}</h2>
           <div className="grid gap-4">
@@ -416,25 +388,4 @@
               <button
                 key={index}
                 onClick={() => handleAnswer(option.value, question.dimension)}
-                className="bg-gray-800 text-gray-200 px-6 py-3 rounded-lg hover:bg-gray-700 transition"
-              >
-                {option.text}
-              </button>
-            ))}
-          </div>
-        </div>
-      );
-    };
-
-    const App = () => {
-      return (
-        <div className="min-h-screen flex items-center justify-center">
-          <Quiz />
-        </div>
-      );
-    };
-
-    ReactDOM.render(<App />, document.getElementById('root'));
-  </script>
-</body>
-</html>
+                className="bg-gray
