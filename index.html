@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ataraxia Realm Quiz</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts for Cinzel and Lora -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <!-- html2canvas CDN for Instagram sharing -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Brevo Form Styles (Adapted) -->
   <style>
     body {
       font-family: 'Lora', serif;
@@ -29,6 +32,37 @@
       padding: 20px;
       max-width: 540px;
       margin: 0 auto;
+    }
+    #sib-container input:-ms-input-placeholder {
+      text-align: left;
+      font-family: 'Lora', serif;
+      color: #c0ccda;
+    }
+    #sib-container input::placeholder {
+      text-align: left;
+      font-family: 'Lora', serif;
+      color: #c0ccda;
+    }
+    #sib-container a {
+      text-decoration: underline;
+      color: #f59e0b; /* amber-500 equivalent */
+    }
+    #error-message, #success-message {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      text-align: center;
+      color: #661d1d; /* error */
+      background-color: #ffeded;
+      border-radius: 3px;
+      border: 1px solid #ff4949;
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 8px;
+    }
+    #success-message {
+      color: #085229; /* success */
+      background-color: #e7faf0;
+      border-color: #13ce66;
     }
     .quiz-container {
       text-align: center;
@@ -70,7 +104,7 @@
     .option-button:hover {
       background-color: #374151; /* gray-700 */
     }
-    .name-input {
+    .email-input {
       background-color: #1f2937; /* gray-800 */
       color: #e2e8f0; /* gray-200 */
       padding: 8px 16px;
@@ -80,10 +114,6 @@
       max-width: 300px;
       margin-bottom: 16px;
       font-size: 16px;
-    }
-    .name-input::placeholder {
-      color: #c0ccda; /* gray-400 */
-      font-family: 'Lora', serif;
     }
     .submit-button {
       background-color: #f59e0b; /* amber-500 */
@@ -163,12 +193,16 @@
       margin-bottom: 24px;
     }
   </style>
+  <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
 </head>
 <body>
   <div id="root"></div>
   <!-- React and ReactDOM CDNs -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel CDN for JSX -->
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script type="text/babel">
   <script type="text/javascript">
     const questions = [
       {
@@ -387,6 +421,15 @@
     };
 
     const ProgressBar = ({ current, total }) => {
+      return (
+        <div className="w-full max-w-md mx-auto mt-4">
+          <div className="bg-gray-700 h-2 rounded-full">
+            <div
+              className="bg-amber-400 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${(current / total) * 100}%` }}
+            ></div>
+          </div>
+        </div>
       return React.createElement(
         'div',
         { className: 'progress-bar' },
@@ -400,37 +443,89 @@
       );
     };
 
-    const NameForm = ({ onSubmit }) => {
-      const [name, setName] = React.useState('');
+    const EmailForm = ({ onSubmit }) => {
+      const [email, setEmail] = React.useState('');
       const [error, setError] = React.useState(null);
 
       const handleSubmit = (e) => {
         e.preventDefault();
-        if (!name || !/^[a-zA-Z\s]+$/.test(name.trim())) {
-          setError('Please enter a valid name (letters and spaces only).');
+        if (!email) {
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          setError('Please enter a valid email.');
           return;
         }
-        onSubmit(name.trim());
+        // Programmatically submit the hidden form
+        const form = document.getElementById('brevo-form');
+        form.querySelector('input[name="EMAIL"]').value = email;
+        form.submit();
+        onSubmit(e); // Proceed to show results
+        onSubmit(e);
       };
 
+      return (
+        <div className="text-center p-6 max-w-lg mx-auto cursor-quill">
+          <h2 className="text-2xl font-cinzel text-amber-300 mb-4">Enter Your Email</h2>
+          <p className="text-gray-300 mb-6">Provide your email to receive your Ataraxia realm results and the first chapter of Ataraxia.</p>
+          <div className="flex flex-col items-center">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="bg-gray-800 text-gray-200 px-4 py-2 rounded-lg mb-4 w-full max-w-xs"
+              required
+            />
+            {error && <p className="text-red-400 mb-4">{error}</p>}
+            <button
+              onClick={handleSubmit}
+              className="bg-amber-500 text-gray-900 px-6 py-2 rounded-full hover:bg-amber-400 transition font-cinzel"
+            >
+              See Your Realm
+            </button>
+          </div>
+          {/* Hidden form for Brevo submission */}
+          <form
+            id="brevo-form"
+            action="https://<your-brevo-account>.sendinblue.com/users/subscribe/js_id/<your-js-id>/id/<your-form-id>"
+            method="POST"
+            style={{ display: 'none' }}
+          >
+            <input type="email" name="EMAIL" />
+            <input type="hidden" name="js_id" value="<your-js-id>" />
+            <input type="hidden" name="id" value="<your-form-id>" />
+          </form>
+        </div>
       return React.createElement(
         'div',
         { className: 'quiz-container cursor-quill' },
-        React.createElement('h2', { className: 'subtitle' }, 'Enter Your Name'),
-        React.createElement('p', { className: 'text-gray-300' }, 'Tell us your adventurer’s name to discover your Ataraxia realm.'),
+        React.createElement('h2', { className: 'subtitle' }, 'Enter Your Email'),
+        React.createElement('p', { className: 'text-gray-300' }, 'Provide your email to receive your Ataraxia realm results and the first chapter of Ataraxia.'),
         React.createElement(
           'div',
           { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } },
           React.createElement('input', {
-            type: 'text',
-            value: name,
-            onChange: (e) => setName(e.target.value),
-            placeholder: 'Enter your name',
-            className: 'name-input',
+            type: 'email',
+            value: email,
+            onChange: (e) => setEmail(e.target.value),
+            placeholder: 'Enter your email',
+            className: 'email-input',
             required: true
           }),
           error && React.createElement('p', { className: 'error-text' }, error),
           React.createElement('button', { onClick: handleSubmit, className: 'submit-button' }, 'See Your Realm')
+        ),
+        React.createElement(
+          'form',
+          {
+            id: 'brevo-form',
+            action: 'https://438a9235.sibforms.com/serve/MUIFAHIY2DfRgKzSVjeBG80hDx2l0Uq-tfDSYgsB3-Rool1s5GCUdziUZzvaEgB5V3l0SyY1wFAZ8VM0cw1ro0SZ_ZsYtP0uSbpHjzn7vDNEqE8Oiu7IABn6oldtyFUxl3Svv9a26l5hIJ2AADpoiSnXPoZt2a3TklMHF8iNeJ0av1ihA2Vh6KTJdhNG5mek4GVSoBjgohYJvC97',
+            method: 'POST',
+            style: { display: 'none' }
+          },
+          React.createElement('input', { type: 'text', name: 'EMAIL' }),
+          React.createElement('input', { type: 'text', name: 'email_address_check', value: '' }),
+          React.createElement('input', { type: 'hidden', name: 'locale', value: 'en' }),
+          React.createElement('input', { type: 'hidden', name: 'html_type', value: 'simple' })
         )
       );
     };
@@ -438,24 +533,23 @@
     const Quiz = () => {
       const [currentQuestion, setCurrentQuestion] = React.useState(0);
       const [scores, setScores] = React.useState({ E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 });
-      const [showNameForm, setShowNameForm] = React.useState(false);
+      const [showEmailForm, setShowEmailForm] = React.useState(false);
       const [result, setResult] = React.useState(null);
-      const [adventurerName, setAdventurerName] = React.useState('');
 
       const handleAnswer = (value, dimension) => {
         setScores((prev) => ({ ...prev, [value]: prev[value] + 1 }));
         if (currentQuestion < questions.length - 1) {
           setCurrentQuestion(currentQuestion + 1);
         } else {
-          setShowNameForm(true);
+          setShowEmailForm(true);
         }
       };
 
-      const handleNameSubmit = (name) => {
+      const handleEmailSubmit = (event) => {
+        event.preventDefault();
         const mbtiType = determineMBTI(scores);
         setResult(realmMappings[mbtiType] || "Sorin");
-        setAdventurerName(name);
-        setShowNameForm(false);
+        setShowEmailForm(false);
       };
 
       const determineMBTI = (scores) => {
@@ -493,18 +587,52 @@
         }
       };
 
-      if (showNameForm) {
-        return React.createElement(NameForm, { onSubmit: handleNameSubmit });
+      if (showEmailForm) {
+        return <EmailForm onSubmit={handleEmailSubmit} />;
+        return React.createElement(EmailForm, { onSubmit: handleEmailSubmit });
       }
 
       if (result) {
+        return (
+          <div className="text-center p-6 max-w-lg mx-auto cursor-quill">
+            <div id="result-card">
+              <h2 className="text-3xl font-cinzel text-amber-300 mb-4">Your Realm: {result}</h2>
+              <p className="text-xl text-gray-200 mb-6">{realmDescriptions[result]}</p>
+              <img
+                src={getSigilImage(result)}
+                alt={`${result} Sigil`}
+                className="mx-auto mb-6 w-32 h-32"
+                onError={(e) => (e.target.src = 'https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-sorin.png')}
+              />
+            </div>
+            <div className="flex justify-center gap-4 mb-6">
+              <button
+                onClick={shareOnX}
+                className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-500 transition font-cinzel"
+              >
+                Share on X
+              </button>
+              <button
+                onClick={shareOnInstagram}
+                className="bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-500 transition font-cinzel"
+              >
+                Share on Instagram
+              </button>
+              <button
+                onClick={() => window.open('https://yourdomain.com/members-area', '_blank')}
+                className="bg-amber-500 text-gray-900 px-4 py-2 rounded-full hover:bg-amber-400 transition font-cinzel"
+              >
+                Join Us
+              </button>
+            </div>
+          </div>
         return React.createElement(
           'div',
           { className: 'quiz-container cursor-quill' },
           React.createElement(
             'div',
             { id: 'result-card' },
-            React.createElement('h2', { className: 'subtitle' }, `Welcome, ${adventurerName}, to ${result}!`),
+            React.createElement('h2', { className: 'subtitle' }, `Your Realm: ${result}`),
             React.createElement('p', { className: 'result-text' }, realmDescriptions[result]),
             React.createElement('img', {
               src: getSigilImage(result),
@@ -524,6 +652,23 @@
 
       const question = questions[currentQuestion];
 
+      return (
+        <div className="text-center p-6 max-w-lg mx-auto cursor-quill">
+          <h1 className="text-4xl font-cinzel text-amber-300 mb-8">Discover Your Ataraxia Realm</h1>
+          <ProgressBar current={currentQuestion + 1} total={questions.length} />
+          <h2 className="text-2xl text-gray-200 mb-6">{question.text}</h2>
+          <div className="grid gap-4">
+            {question.options.map((option, index) => (
+              <button
+                key={index}
+                onClick={() => handleAnswer(option.value, question.dimension)}
+                className="bg-gray-800 text-gray-200 px-6 py-3 rounded-lg hover:bg-gray-700 transition"
+              >
+                {option.text}
+              </button>
+            ))}
+          </div>
+        </div>
       return React.createElement(
         'div',
         { className: 'quiz-container cursor-quill' },
@@ -549,6 +694,10 @@
     };
 
     const App = () => {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <Quiz />
+        </div>
       return React.createElement(
         'div',
         { style: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
@@ -556,7 +705,26 @@
       );
     };
 
+    ReactDOM.render(<App />, document.getElementById('root'));
     ReactDOM.render(React.createElement(App), document.getElementById('root'));
   </script>
+  <!-- Brevo Validation Script -->
+  <script>
+    window.REQUIRED_CODE_ERROR_MESSAGE = 'Please choose a country code';
+    window.LOCALE = 'en';
+    window.EMAIL_INVALID_MESSAGE = window.SMS_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
+    window.REQUIRED_ERROR_MESSAGE = "This field cannot be left blank.";
+    window.GENERIC_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
+    window.translation = {
+      common: {
+        selectedList: '{quantity} list selected',
+        selectedLists: '{quantity} lists selected',
+        selectedOption: '{quantity} selected',
+        selectedOptions: '{quantity} selected',
+      }
+    };
+    var AUTOHIDE = Boolean(1);
+  </script>
+  <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
 </body>
 </html>
