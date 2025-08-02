@@ -22,7 +22,7 @@
       overflow-x: hidden;
     }
     .cursor-quill {
-      cursor: url('https://shelmasahayam.github.io/ataraxiaquiz/assets/quill-cursor.png'), auto;
+      cursor: url('https://<your-username>.github.io/ataraxiaquiz/assets/quill-cursor.png'), auto;
     }
     #result-card {
       background: rgba(0, 0, 0, 0.7);
@@ -255,6 +255,21 @@
       Ascian: "A land of manes near Kural, Ascian beckons those who find freedom in solitude and practical ingenuity.",
     };
 
+    // Optional: Amazon affiliate links for each realm (replace with your links)
+    const realmAffiliateLinks = {
+      Nesrin: "https://www.amazon.com/dp/B08J4K7XYZ?tag=youraffiliateid-20",
+      Sorin: "https://www.amazon.com/dp/B09K5M8N12?tag=youraffiliateid-20",
+      Prisca: "https://www.amazon.com/dp/B07H9J2PQR?tag=youraffiliateid-20",
+      "Niji Archipelagoes": "https://www.amazon.com/dp/B06X3Y7Z8W?tag=youraffiliateid-20",
+      Harmaa: "https://www.amazon.com/dp/B08L5N6K2P?tag=youraffiliateid-20",
+      Aceso: "https://www.amazon.com/dp/B09M7V3T4R?tag=youraffiliateid-20",
+      Kural: "https://www.amazon.com/dp/B07N4G8M9S?tag=youraffiliateid-20",
+      Cozen: "https://www.amazon.com/dp/B08P3W5T6Y?tag=youraffiliateid-20",
+      Niran: "https://www.amazon.com/dp/B09Q2F8R7T?tag=youraffiliateid-20",
+      Nagam: "https://www.amazon.com/dp/B06Y5N3K8P?tag=youraffiliateid-20",
+      Ascian: "https://www.amazon.com/dp/B07T4H9M2X?tag=youraffiliateid-20",
+    };
+
     const ProgressBar = ({ current, total }) => {
       return (
         <div className="w-full max-w-md mx-auto mt-4">
@@ -272,21 +287,22 @@
       return (
         <div className="text-center p-6 max-w-lg mx-auto cursor-quill">
           <h2 className="text-2xl font-cinzel text-amber-300 mb-4">Enter Your Email</h2>
-          <p className="text-gray-300 mb-6">Provide your email to receive your Ataraxia realm results and updates.</p>
+          <p className="text-gray-300 mb-6">Provide your email to receive your Ataraxia realm results and the first chapter of Ataraxia.</p>
           <form
-            action="https://formspree.io/f/mblkonvv"
+            action="https://<your-mailchimp-form-action>"
             method="POST"
             onSubmit={onSubmit}
             className="flex flex-col items-center"
           >
             <input
               type="email"
-              name="email"
+              name="EMAIL"
               placeholder="Enter your email"
               className="bg-gray-800 text-gray-200 px-4 py-2 rounded-lg mb-4 w-full max-w-xs"
               required
             />
-            <input type="hidden" name="_subject" value="Ataraxia Realm Quiz Submission" />
+            <input type="hidden" name="u" value="<your-mailchimp-u>" />
+            <input type="hidden" name="id" value="<your-mailchimp-id>" />
             <button
               type="submit"
               className="bg-amber-500 text-gray-900 px-6 py-2 rounded-full hover:bg-amber-400 transition font-cinzel"
@@ -329,7 +345,7 @@
       };
 
       const shareOnX = () => {
-        const text = encodeURIComponent(`I got ${result} in the Ataraxia Realm Quiz! Discover your realm at https://shelmasahayam.github.io/ataraxiaquiz/`);
+        const text = encodeURIComponent(`I got ${result} in the Ataraxia Realm Quiz! Discover your realm at https://<your-username>.github.io/ataraxiaquiz/`);
         window.open(`https://x.com/intent/tweet?text=${text}`, '_blank');
       };
 
@@ -348,10 +364,10 @@
 
       const getSigilImage = (realm) => {
         try {
-          return `https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
+          return `https://<your-username>.github.io/ataraxiaquiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
         } catch (e) {
           console.error(`Sigil image for ${realm} not found`);
-          return 'https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-sorin.png';
+          return 'https://<your-username>.github.io/ataraxiaquiz/assets/sigil-sorin.png';
         }
       };
 
@@ -369,8 +385,18 @@
                 src={getSigilImage(result)}
                 alt={`${result} Sigil`}
                 className="mx-auto mb-6 w-32 h-32"
-                onError={(e) => (e.target.src = 'https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-sorin.png')}
+                onError={(e) => (e.target.src = 'https://<your-username>.github.io/ataraxiaquiz/assets/sigil-sorin.png')}
               />
+              {/* Optional: Amazon affiliate-linked image */}
+              <p className="text-gray-300 mb-4">Explore items inspired by {result}</p>
+              <a href={realmAffiliateLinks[result]} target="_blank" rel="noopener noreferrer">
+                <img
+                  src="https://<your-username>.github.io/ataraxiaquiz/assets/amazon-product.jpg"
+                  alt="Explore on Amazon"
+                  className="mx-auto mb-6 w-32 h-32"
+                />
+              </a>
+              <p className="text-sm text-gray-400 mb-4">As an Amazon Associate, we earn from qualifying purchases.</p>
             </div>
             <div className="flex justify-center gap-4 mb-6">
               <button
@@ -384,6 +410,12 @@
                 className="bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-500 transition font-cinzel"
               >
                 Share on Instagram
+              </button>
+              <button
+                onClick={() => window.open('https://yourdomain.com/members-area', '_blank')}
+                className="bg-amber-500 text-gray-900 px-4 py-2 rounded-full hover:bg-amber-400 transition font-cinzel"
+              >
+                Join Us
               </button>
             </div>
           </div>
