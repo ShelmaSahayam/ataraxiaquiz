@@ -4,13 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ataraxia Realm Quiz</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts for Cinzel and Lora -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <!-- html2canvas CDN for Instagram sharing -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <!-- Brevo Form Styles (Adapted) -->
   <style>
     body {
       font-family: 'Lora', serif;
@@ -45,13 +42,13 @@
     }
     #sib-container a {
       text-decoration: underline;
-      color: #f59e0b; /* amber-500 equivalent */
+      color: #f59e0b;
     }
     #error-message, #success-message {
       font-family: 'Lora', serif;
       font-size: 16px;
       text-align: center;
-      color: #661d1d; /* error */
+      color: #661d1d;
       background-color: #ffeded;
       border-radius: 3px;
       border: 1px solid #ff4949;
@@ -60,7 +57,7 @@
       padding: 8px;
     }
     #success-message {
-      color: #085229; /* success */
+      color: #085229;
       background-color: #e7faf0;
       border-color: #13ce66;
     }
@@ -74,24 +71,24 @@
       width: 100%;
       max-width: 400px;
       margin: 16px auto;
-      background-color: #4b5563; /* gray-700 */
+      background-color: #4b5563;
       height: 8px;
       border-radius: 9999px;
     }
     .progress-bar-fill {
-      background-color: #f59e0b; /* amber-400 */
+      background-color: #f59e0b;
       height: 8px;
       border-radius: 9999px;
       transition: width 0.3s ease-in-out;
     }
     .question-text {
       font-size: 24px;
-      color: #e2e8f0; /* gray-200 */
+      color: #e2e8f0;
       margin-bottom: 24px;
     }
     .option-button {
-      background-color: #1f2937; /* gray-800 */
-      color: #e2e8f0; /* gray-200 */
+      background-color: #1f2937;
+      color: #e2e8f0;
       padding: 12px 24px;
       border-radius: 8px;
       border: none;
@@ -102,11 +99,11 @@
       transition: background-color 0.2s;
     }
     .option-button:hover {
-      background-color: #374151; /* gray-700 */
+      background-color: #374151;
     }
-    .email-input {
-      background-color: #1f2937; /* gray-800 */
-      color: #e2e8f0; /* gray-200 */
+    .name-input {
+      background-color: #1f2937;
+      color: #e2e8f0;
       padding: 8px 16px;
       border-radius: 8px;
       border: none;
@@ -115,9 +112,13 @@
       margin-bottom: 16px;
       font-size: 16px;
     }
+    .name-input::placeholder {
+      color: #c0ccda;
+      font-family: 'Lora', serif;
+    }
     .submit-button {
-      background-color: #f59e0b; /* amber-500 */
-      color: #111827; /* gray-900 */
+      background-color: #f59e0b;
+      color: #111827;
       padding: 8px 24px;
       border-radius: 9999px;
       border: none;
@@ -127,15 +128,15 @@
       transition: background-color 0.2s;
     }
     .submit-button:hover {
-      background-color: #fbbf24; /* amber-400 */
+      background-color: #fbbf24;
     }
     .error-text {
-      color: #f87171; /* red-400 */
+      color: #f87171;
       margin-bottom: 16px;
       font-size: 14px;
     }
     .share-button-x {
-      background-color: #2563eb; /* blue-600 */
+      background-color: #2563eb;
       color: #ffffff;
       padding: 8px 16px;
       border-radius: 9999px;
@@ -147,10 +148,10 @@
       transition: background-color 0.2s;
     }
     .share-button-x:hover {
-      background-color: #3b82f6; /* blue-500 */
+      background-color: #3b82f6;
     }
     .share-button-instagram {
-      background-color: #db2777; /* pink-600 */
+      background-color: #db2777;
       color: #ffffff;
       padding: 8px 16px;
       border-radius: 9999px;
@@ -162,7 +163,7 @@
       transition: background-color 0.2s;
     }
     .share-button-instagram:hover {
-      background-color: #ec4899; /* pink-500 */
+      background-color: #ec4899;
     }
     .button-container {
       display: flex;
@@ -173,23 +174,23 @@
     .title {
       font-family: 'Cinzel', serif;
       font-size: 36px;
-      color: #f59e0b; /* amber-300 */
+      color: #f59e0b;
       margin-bottom: 32px;
     }
     .subtitle {
       font-family: 'Cinzel', serif;
       font-size: 24px;
-      color: #f59e0b; /* amber-300 */
+      color: #f59e0b;
       margin-bottom: 16px;
     }
     .text-gray-300 {
-      color: #d1d5db; /* gray-300 */
+      color: #d1d5db;
       margin-bottom: 24px;
       font-size: 16px;
     }
     .result-text {
       font-size: 20px;
-      color: #e2e8f0; /* gray-200 */
+      color: #e2e8f0;
       margin-bottom: 24px;
     }
   </style>
@@ -200,9 +201,6 @@
   <!-- React and ReactDOM CDNs -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- Babel CDN for JSX -->
-  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-  <script type="text/babel">
   <script type="text/javascript">
     const questions = [
       {
@@ -384,7 +382,7 @@
           { text: "Join spontaneously, embracing the ritual’s flow.", value: "P" },
         ],
         dimension: "JP",
-      },
+      }
     ];
 
     const realmMappings = {
@@ -421,15 +419,6 @@
     };
 
     const ProgressBar = ({ current, total }) => {
-      return (
-        <div className="w-full max-w-md mx-auto mt-4">
-          <div className="bg-gray-700 h-2 rounded-full">
-            <div
-              className="bg-amber-400 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${(current / total) * 100}%` }}
-            ></div>
-          </div>
-        </div>
       return React.createElement(
         'div',
         { className: 'progress-bar' },
@@ -443,72 +432,49 @@
       );
     };
 
-    const EmailForm = ({ onSubmit }) => {
+    const NameForm = ({ onSubmit }) => {
+      const [name, setName] = React.useState('');
       const [email, setEmail] = React.useState('');
       const [error, setError] = React.useState(null);
 
       const handleSubmit = (e) => {
         e.preventDefault();
-        if (!email) {
+        if (!name || !/^[a-zA-Z\s]+$/.test(name.trim())) {
+          setError('Please enter a valid name (letters and spaces only).');
+          return;
+        }
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           setError('Please enter a valid email.');
           return;
         }
-        // Programmatically submit the hidden form
         const form = document.getElementById('brevo-form');
         form.querySelector('input[name="EMAIL"]').value = email;
         form.submit();
-        onSubmit(e); // Proceed to show results
-        onSubmit(e);
+        onSubmit(name.trim());
       };
 
-      return (
-        <div className="text-center p-6 max-w-lg mx-auto cursor-quill">
-          <h2 className="text-2xl font-cinzel text-amber-300 mb-4">Enter Your Email</h2>
-          <p className="text-gray-300 mb-6">Provide your email to receive your Ataraxia realm results and the first chapter of Ataraxia.</p>
-          <div className="flex flex-col items-center">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="bg-gray-800 text-gray-200 px-4 py-2 rounded-lg mb-4 w-full max-w-xs"
-              required
-            />
-            {error && <p className="text-red-400 mb-4">{error}</p>}
-            <button
-              onClick={handleSubmit}
-              className="bg-amber-500 text-gray-900 px-6 py-2 rounded-full hover:bg-amber-400 transition font-cinzel"
-            >
-              See Your Realm
-            </button>
-          </div>
-          {/* Hidden form for Brevo submission */}
-          <form
-            id="brevo-form"
-            action="https://<your-brevo-account>.sendinblue.com/users/subscribe/js_id/<your-js-id>/id/<your-form-id>"
-            method="POST"
-            style={{ display: 'none' }}
-          >
-            <input type="email" name="EMAIL" />
-            <input type="hidden" name="js_id" value="<your-js-id>" />
-            <input type="hidden" name="id" value="<your-form-id>" />
-          </form>
-        </div>
       return React.createElement(
         'div',
         { className: 'quiz-container cursor-quill' },
-        React.createElement('h2', { className: 'subtitle' }, 'Enter Your Email'),
-        React.createElement('p', { className: 'text-gray-300' }, 'Provide your email to receive your Ataraxia realm results and the first chapter of Ataraxia.'),
+        React.createElement('h2', { className: 'subtitle' }, 'Enter Your Details'),
+        React.createElement('p', { className: 'text-gray-300' }, 'Provide your adventurer’s name and email to discover your Ataraxia realm and receive the first chapter of Ataraxia.'),
         React.createElement(
           'div',
           { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } },
+          React.createElement('input', {
+            type: 'text',
+            value: name,
+            onChange: (e) => setName(e.target.value),
+            placeholder: 'Enter your name',
+            className: 'name-input',
+            required: true
+          }),
           React.createElement('input', {
             type: 'email',
             value: email,
             onChange: (e) => setEmail(e.target.value),
             placeholder: 'Enter your email',
-            className: 'email-input',
+            className: 'name-input',
             required: true
           }),
           error && React.createElement('p', { className: 'error-text' }, error),
@@ -533,23 +499,24 @@
     const Quiz = () => {
       const [currentQuestion, setCurrentQuestion] = React.useState(0);
       const [scores, setScores] = React.useState({ E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 });
-      const [showEmailForm, setShowEmailForm] = React.useState(false);
+      const [showNameForm, setShowNameForm] = React.useState(false);
       const [result, setResult] = React.useState(null);
+      const [adventurerName, setAdventurerName] = React.useState('');
 
       const handleAnswer = (value, dimension) => {
         setScores((prev) => ({ ...prev, [value]: prev[value] + 1 }));
         if (currentQuestion < questions.length - 1) {
           setCurrentQuestion(currentQuestion + 1);
         } else {
-          setShowEmailForm(true);
+          setShowNameForm(true);
         }
       };
 
-      const handleEmailSubmit = (event) => {
-        event.preventDefault();
+      const handleNameSubmit = (name) => {
         const mbtiType = determineMBTI(scores);
         setResult(realmMappings[mbtiType] || "Sorin");
-        setShowEmailForm(false);
+        setAdventurerName(name);
+        setShowNameForm(false);
       };
 
       const determineMBTI = (scores) => {
@@ -587,52 +554,18 @@
         }
       };
 
-      if (showEmailForm) {
-        return <EmailForm onSubmit={handleEmailSubmit} />;
-        return React.createElement(EmailForm, { onSubmit: handleEmailSubmit });
+      if (showNameForm) {
+        return React.createElement(NameForm, { onSubmit: handleNameSubmit });
       }
 
       if (result) {
-        return (
-          <div className="text-center p-6 max-w-lg mx-auto cursor-quill">
-            <div id="result-card">
-              <h2 className="text-3xl font-cinzel text-amber-300 mb-4">Your Realm: {result}</h2>
-              <p className="text-xl text-gray-200 mb-6">{realmDescriptions[result]}</p>
-              <img
-                src={getSigilImage(result)}
-                alt={`${result} Sigil`}
-                className="mx-auto mb-6 w-32 h-32"
-                onError={(e) => (e.target.src = 'https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-sorin.png')}
-              />
-            </div>
-            <div className="flex justify-center gap-4 mb-6">
-              <button
-                onClick={shareOnX}
-                className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-500 transition font-cinzel"
-              >
-                Share on X
-              </button>
-              <button
-                onClick={shareOnInstagram}
-                className="bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-500 transition font-cinzel"
-              >
-                Share on Instagram
-              </button>
-              <button
-                onClick={() => window.open('https://yourdomain.com/members-area', '_blank')}
-                className="bg-amber-500 text-gray-900 px-4 py-2 rounded-full hover:bg-amber-400 transition font-cinzel"
-              >
-                Join Us
-              </button>
-            </div>
-          </div>
         return React.createElement(
           'div',
           { className: 'quiz-container cursor-quill' },
           React.createElement(
             'div',
             { id: 'result-card' },
-            React.createElement('h2', { className: 'subtitle' }, `Your Realm: ${result}`),
+            React.createElement('h2', { className: 'subtitle' }, `Welcome, ${adventurerName}, to ${result}!`),
             React.createElement('p', { className: 'result-text' }, realmDescriptions[result]),
             React.createElement('img', {
               src: getSigilImage(result),
@@ -652,23 +585,6 @@
 
       const question = questions[currentQuestion];
 
-      return (
-        <div className="text-center p-6 max-w-lg mx-auto cursor-quill">
-          <h1 className="text-4xl font-cinzel text-amber-300 mb-8">Discover Your Ataraxia Realm</h1>
-          <ProgressBar current={currentQuestion + 1} total={questions.length} />
-          <h2 className="text-2xl text-gray-200 mb-6">{question.text}</h2>
-          <div className="grid gap-4">
-            {question.options.map((option, index) => (
-              <button
-                key={index}
-                onClick={() => handleAnswer(option.value, question.dimension)}
-                className="bg-gray-800 text-gray-200 px-6 py-3 rounded-lg hover:bg-gray-700 transition"
-              >
-                {option.text}
-              </button>
-            ))}
-          </div>
-        </div>
       return React.createElement(
         'div',
         { className: 'quiz-container cursor-quill' },
@@ -694,10 +610,6 @@
     };
 
     const App = () => {
-      return (
-        <div className="min-h-screen flex items-center justify-center">
-          <Quiz />
-        </div>
       return React.createElement(
         'div',
         { style: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
@@ -705,7 +617,6 @@
       );
     };
 
-    ReactDOM.render(<App />, document.getElementById('root'));
     ReactDOM.render(React.createElement(App), document.getElementById('root'));
   </script>
   <!-- Brevo Validation Script -->
