@@ -289,7 +289,7 @@
           <h2 className="text-2xl font-cinzel text-amber-300 mb-4">Enter Your Email</h2>
           <p className="text-gray-300 mb-6">Provide your email to receive your Ataraxia realm results and the first chapter of Ataraxia.</p>
           <form
-            action="https://<your-mailchimp-form-action>"
+            action="https://<your-brevo-account>.sendinblue.com/users/subscribe/js_id/<your-js-id>/id/<your-form-id>"
             method="POST"
             onSubmit={onSubmit}
             className="flex flex-col items-center"
@@ -301,8 +301,8 @@
               className="bg-gray-800 text-gray-200 px-4 py-2 rounded-lg mb-4 w-full max-w-xs"
               required
             />
-            <input type="hidden" name="u" value="<your-mailchimp-u>" />
-            <input type="hidden" name="id" value="<your-mailchimp-id>" />
+            <input type="hidden" name="js_id" value="<your-js-id>" />
+            <input type="hidden" name="id" value="<your-form-id>" />
             <button
               type="submit"
               className="bg-amber-500 text-gray-900 px-6 py-2 rounded-full hover:bg-amber-400 transition font-cinzel"
@@ -456,4 +456,3 @@
   </script>
 </body>
 </html>
-
