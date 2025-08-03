@@ -205,11 +205,15 @@
       margin: 0 auto;
       color: #f87171;
     }
+    iframe#brevo-iframe {
+      display: none;
+    }
   </style>
   <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
 </head>
 <body>
   <div id="root"></div>
+  <iframe id="brevo-iframe" name="brevo-iframe"></iframe>
   <!-- React and ReactDOM CDNs -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -492,7 +496,7 @@
           form.submit();
           setSuccess('Subscribed! Check your email for the first chapter of Ataraxia.');
           setError(null);
-          onSubmit(name.trim());
+          setTimeout(() => onSubmit(name.trim()), 500); // Delay to ensure form submission
         } catch (err) {
           setError('Failed to subscribe. Please try again.');
           setSuccess(null);
@@ -534,6 +538,7 @@
             id: 'brevo-form',
             action: 'https://438a9235.sibforms.com/serve/MUIFAHIY2DfRgKzSVjeBG80hDx2l0Uq-tfDSYgsB3-Rool1s5GCUdziUZzvaEgB5V3l0SyY1wFAZ8VM0cw1ro0SZ_ZsYtP0uSbpHjzn7vDNEqE8Oiu7IABn6oldtyFUxl3Svv9a26l5hIJ2AADpoiSnXPoZt2a3TklMHF8iNeJ0av1ihA2Vh6KTJdhNG5mek4GVSoBjgohYJvC97',
             method: 'POST',
+            target: 'brevo-iframe',
             style: { display: 'none' }
           },
           React.createElement('input', { type: 'text', name: 'EMAIL' }),
