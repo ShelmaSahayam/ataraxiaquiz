@@ -135,6 +135,11 @@
       margin-bottom: 16px;
       font-size: 14px;
     }
+    .success-text {
+      color: #13ce66;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
     .share-button-x {
       background-color: #2563eb;
       color: #ffffff;
@@ -192,6 +197,13 @@
       font-size: 20px;
       color: #e2e8f0;
       margin-bottom: 24px;
+    }
+    .error-boundary {
+      text-align: center;
+      padding: 24px;
+      max-width: 540px;
+      margin: 0 auto;
+      color: #f87171;
     }
   </style>
   <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
@@ -418,6 +430,30 @@
       Ascian: "A land of manes near Kural, Ascian beckons those who find freedom in solitude and practical ingenuity.",
     };
 
+    const ErrorBoundary = ({ children }) => {
+      const [hasError, setHasError] = React.useState(false);
+
+      React.useEffect(() => {
+        const errorHandler = (error) => {
+          console.error('ErrorBoundary caught:', error);
+          setHasError(true);
+        };
+        window.addEventListener('error', errorHandler);
+        return () => window.removeEventListener('error', errorHandler);
+      }, []);
+
+      if (hasError) {
+        return React.createElement(
+          'div',
+          { className: 'error-boundary' },
+          React.createElement('h2', { className: 'subtitle' }, 'Something went wrong.'),
+          React.createElement('p', { className: 'text-gray-300' }, 'Please refresh the page or try again later.')
+        );
+      }
+
+      return children;
+    };
+
     const ProgressBar = ({ current, total }) => {
       return React.createElement(
         'div',
@@ -436,28 +472,39 @@
       const [name, setName] = React.useState('');
       const [email, setEmail] = React.useState('');
       const [error, setError] = React.useState(null);
+      const [success, setSuccess] = React.useState(null);
 
       const handleSubmit = (e) => {
         e.preventDefault();
-        if (!name || !/^[a-zA-Z\s]+$/.test(name.trim())) {
-          setError('Please enter a valid name (letters and spaces only).');
+        if (!name || !/^[a-zA-Z\s'-]+$/.test(name.trim())) {
+          setError('Please enter a valid name (letters, spaces, hyphens, or apostrophes only).');
+          setSuccess(null);
           return;
         }
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           setError('Please enter a valid email.');
+          setSuccess(null);
           return;
         }
-        const form = document.getElementById('brevo-form');
-        form.querySelector('input[name="EMAIL"]').value = email;
-        form.submit();
-        onSubmit(name.trim());
+        try {
+          const form = document.getElementById('brevo-form');
+          form.querySelector('input[name="EMAIL"]').value = email;
+          form.submit();
+          setSuccess('Subscribed! Check your email for the first chapter of Ataraxia.');
+          setError(null);
+          onSubmit(name.trim());
+        } catch (err) {
+          setError('Failed to subscribe. Please try again.');
+          setSuccess(null);
+          console.error('Brevo submission error:', err);
+        }
       };
 
       return React.createElement(
         'div',
         { className: 'quiz-container cursor-quill' },
         React.createElement('h2', { className: 'subtitle' }, 'Enter Your Details'),
-        React.createElement('p', { className: 'text-gray-300' }, 'Provide your adventurer’s name and email to discover your Ataraxia realm.'),
+        React.createElement('p', { className: 'text-gray-300' }, 'Provide your adventurer’s name and email to discover your Ataraxia realm and receive the first chapter of Ataraxia.'),
         React.createElement(
           'div',
           { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } },
@@ -478,6 +525,7 @@
             required: true
           }),
           error && React.createElement('p', { className: 'error-text' }, error),
+          success && React.createElement('p', { className: 'success-text' }, success),
           React.createElement('button', { onClick: handleSubmit, className: 'submit-button' }, 'See Your Realm')
         ),
         React.createElement(
@@ -489,7 +537,6 @@
             style: { display: 'none' }
           },
           React.createElement('input', { type: 'text', name: 'EMAIL' }),
-          React.createElement('input', { type: 'text', name: 'email_address_check', value: '' }),
           React.createElement('input', { type: 'hidden', name: 'locale', value: 'en' }),
           React.createElement('input', { type: 'hidden', name: 'html_type', value: 'simple' })
         )
@@ -546,12 +593,7 @@
       };
 
       const getSigilImage = (realm) => {
-        try {
-          return `https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
-        } catch (e) {
-          console.error(`Sigil image for ${realm} not found`);
-          return 'https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-sorin.png';
-        }
+        return `https://shelmasahayam.github.io/ataraxiaquiz/assets/sigil-${realm.toLowerCase().replace(' ', '-')}.png`;
       };
 
       if (showNameForm) {
@@ -611,13 +653,18 @@
 
     const App = () => {
       return React.createElement(
-        'div',
-        { style: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
-        React.createElement(Quiz)
+        ErrorBoundary,
+        null,
+        React.createElement(
+          'div',
+          { style: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+          React.createElement(Quiz)
+        )
       );
     };
 
-    ReactDOM.render(React.createElement(App), document.getElementById('root'));
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
   </script>
   <!-- Brevo Validation Script -->
   <script>
@@ -639,4 +686,3 @@
   <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
 </body>
 </html>
-
